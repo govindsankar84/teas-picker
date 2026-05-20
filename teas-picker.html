@@ -3,90 +3,263 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BTCC 2nd XI Teas Picker</title>
+<title>🍵 BTCC 2nd XI – Teas Picker</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f0f2f5; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; }
-.card { background: #fff; border-radius: 16px; padding: 1.75rem 1.5rem; max-width: 420px; width: 100%; box-shadow: 0 2px 16px rgba(0,0,0,0.1); }
-.card-header { text-align: center; margin-bottom: 1.5rem; }
-.badge { display: inline-block; background: #e8f5e9; color: #2e7d32; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-bottom: 0.6rem; }
-h1 { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 0.2rem; }
-.subtitle { font-size: 13px; color: #999; }
-.live-dot { display: inline-block; width: 8px; height: 8px; background: #25D366; border-radius: 50%; margin-right: 5px; animation: blink 1.2s ease-in-out infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-.live-label { font-size: 12px; color: #25D366; font-weight: 600; }
-.tabs { display: flex; border-radius: 10px; background: #f0f2f5; padding: 3px; margin-bottom: 1.25rem; }
-.tab { flex: 1; padding: 8px 4px; border: none; background: none; border-radius: 8px; font-size: 13px; font-weight: 500; color: #888; cursor: pointer; transition: all 0.15s; }
-.tab.active { background: #fff; color: #1a1a1a; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
-.screen { display: none; }
-.screen.active { display: block; }
-.players { display: flex; flex-direction: column; gap: 7px; margin-bottom: 1.25rem; }
-.player-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px; background: #f8f9fa; border: 1.5px solid #e9ecef; transition: all 0.15s; }
-.player-row.done-teas { background: #fff8e1; border-color: #ffe082; }
-.player-row.skipped { opacity: 0.4; background: #fff; border-color: #f0f0f0; }
-.player-row.winner-highlight { background: #e8f5e9; border-color: #25D366; }
-.player-num { font-size: 12px; color: #aaa; width: 16px; flex-shrink: 0; text-align: center; }
-.player-name { flex: 1; font-size: 15px; font-weight: 500; color: #1a1a1a; }
-.player-row.skipped .player-name { text-decoration: line-through; color: #bbb; }
-.teas-badge { font-size: 11px; background: #fff3cd; color: #856404; padding: 2px 7px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
-.row-btn { width: 28px; height: 28px; border-radius: 50%; border: none; background: #e9ecef; color: #555; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
-.row-btn:hover { background: #dee2e6; }
-.add-row { display: flex; gap: 8px; margin-bottom: 1.25rem; }
-.add-row input { flex: 1; padding: 9px 12px; border-radius: 10px; border: 1.5px solid #e9ecef; font-size: 14px; color: #1a1a1a; outline: none; background: #f8f9fa; }
-.add-row input:focus { border-color: #25D366; background: #fff; }
-.add-row button { padding: 9px 16px; border-radius: 10px; border: none; background: #25D366; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
-.big-btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.15s; margin-bottom: 10px; }
-.big-btn:active { transform: scale(0.98); }
-.big-btn.green { background: #25D366; color: #fff; }
-.big-btn.green:hover { background: #1ebe5d; }
-.big-btn.green:disabled { background: #a5d6a7; cursor: not-allowed; transform: none; }
-.big-btn.outline { background: #fff; color: #555; border: 1.5px solid #e9ecef; font-size: 14px; font-weight: 500; }
-.big-btn.outline:hover { background: #f8f9fa; }
-.result { min-height: 90px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px; border-radius: 12px; background: #f8f9fa; padding: 1rem; margin-bottom: 10px; text-align: center; transition: background 0.3s; }
-.result.has-winner { background: #e8f5e9; }
-.result-name { font-size: 26px; font-weight: 700; color: #1a1a1a; }
-.result-sub { font-size: 13px; color: #888; }
-.rolling { animation: roll 0.1s ease-in-out infinite alternate; }
-@keyframes roll { from{opacity:0.3;transform:scale(0.97)} to{opacity:1;transform:scale(1)} }
-.history-list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 1.25rem; }
-.history-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; border-radius: 10px; background: #f8f9fa; border: 1.5px solid #e9ecef; font-size: 14px; }
-.history-name { font-weight: 500; color: #1a1a1a; }
-.history-date { font-size: 12px; color: #aaa; }
-.history-del { background: none; border: none; color: #ccc; font-size: 16px; cursor: pointer; padding: 0 4px; }
-.history-del:hover { color: #e24b4a; }
-.empty-state { text-align: center; color: #bbb; font-size: 14px; padding: 1.5rem 0; }
-.section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #bbb; margin-bottom: 8px; }
-.match-info { font-size: 12px; color: #ccc; text-align: center; margin-top: 0.75rem; line-height: 1.6; }
-.info-box { background: #fff8e1; border: 1.5px solid #ffe082; border-radius: 10px; padding: 10px 12px; font-size: 13px; color: #856404; margin-bottom: 1.25rem; line-height: 1.5; }
-.admin-hint { font-size: 12px; color: #bbb; text-align: center; margin-bottom: 8px; }
-.spinner { text-align:center; color:#aaa; font-size:13px; padding:1rem 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.75rem 1.5rem;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.1);
+  }
+  .card-header { text-align: center; margin-bottom: 1.5rem; }
+  .badge {
+    display: inline-block;
+    background: #e8f5e9;
+    color: #2e7d32;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 0.6rem;
+  }
+  h1 { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 0.2rem; }
+  .subtitle { font-size: 13px; color: #999; }
+  .live-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: #25D366;
+    border-radius: 50%;
+    margin-right: 5px;
+    animation: blink 1.2s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+  .live-label { font-size: 12px; color: #25D366; font-weight: 600; }
+  .tabs {
+    display: flex;
+    border-radius: 10px;
+    background: #f0f2f5;
+    padding: 3px;
+    margin-bottom: 1.25rem;
+  }
+  .tab {
+    flex: 1;
+    padding: 8px 4px;
+    border: none;
+    background: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #888;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tab.active { background: #fff; color: #1a1a1a; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  .players { display: flex; flex-direction: column; gap: 7px; margin-bottom: 1.25rem; }
+  .player-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: #f8f9fa;
+    border: 1.5px solid #e9ecef;
+    transition: all 0.15s;
+  }
+  .player-row.done-teas { background: #fff8e1; border-color: #ffe082; }
+  .player-row.skipped { opacity: 0.4; background: #fff; border-color: #f0f0f0; }
+  .player-row.winner-highlight { background: #e8f5e9; border-color: #25D366; }
+  .player-num { font-size: 12px; color: #aaa; width: 16px; flex-shrink: 0; text-align: center; }
+  .player-name { flex: 1; font-size: 15px; font-weight: 500; color: #1a1a1a; }
+  .player-row.skipped .player-name { text-decoration: line-through; color: #bbb; }
+  .teas-badge {
+    font-size: 11px;
+    background: #fff3cd;
+    color: #856404;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .row-btn {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: #e9ecef;
+    color: #555;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .row-btn:hover { background: #dee2e6; }
+  .add-row { display: flex; gap: 8px; margin-bottom: 1.25rem; }
+  .add-row input {
+    flex: 1;
+    padding: 9px 12px;
+    border-radius: 10px;
+    border: 1.5px solid #e9ecef;
+    font-size: 14px;
+    color: #1a1a1a;
+    outline: none;
+    background: #f8f9fa;
+  }
+  .add-row input:focus { border-color: #25D366; background: #fff; }
+  .add-row button {
+    padding: 9px 16px;
+    border-radius: 10px;
+    border: none;
+    background: #25D366;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .big-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 10px;
+  }
+  .big-btn:active { transform: scale(0.98); }
+  .big-btn.green { background: #25D366; color: #fff; }
+  .big-btn.green:hover { background: #1ebe5d; }
+  .big-btn.green:disabled { background: #a5d6a7; cursor: not-allowed; transform: none; }
+  .big-btn.outline {
+    background: #fff;
+    color: #555;
+    border: 1.5px solid #e9ecef;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .big-btn.outline:hover { background: #f8f9fa; }
+.big-btn.whatsapp { background: #25D366; color: #fff; display: flex; align-items: center; }
+.big-btn.whatsapp:hover { background: #1ebe5d; }
+.big-btn.whatsapp { background: #25D366; color: #fff; display: flex; align-items: center; justify-content: center; }
+.big-btn.whatsapp:hover { background: #1ebe5d; }
+  .result {
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    border-radius: 12px;
+    background: #f8f9fa;
+    padding: 1rem;
+    margin-bottom: 10px;
+    text-align: center;
+    transition: background 0.3s;
+  }
+  .result.has-winner { background: #e8f5e9; }
+  .result-name { font-size: 26px; font-weight: 700; color: #1a1a1a; }
+  .result-sub { font-size: 13px; color: #888; }
+  .rolling { animation: roll 0.1s ease-in-out infinite alternate; }
+  @keyframes roll { from{opacity:0.3;transform:scale(0.97)} to{opacity:1;transform:scale(1)} }
+  .viewers {
+    font-size: 12px;
+    color: #aaa;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .history-list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 1.25rem; }
+  .history-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: #f8f9fa;
+    border: 1.5px solid #e9ecef;
+    font-size: 14px;
+  }
+  .history-name { font-weight: 500; color: #1a1a1a; }
+  .history-date { font-size: 12px; color: #aaa; }
+  .history-del { background: none; border: none; color: #ccc; font-size: 16px; cursor: pointer; padding: 0 4px; }
+  .history-del:hover { color: #e24b4a; }
+  .empty-state { text-align: center; color: #bbb; font-size: 14px; padding: 1.5rem 0; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #bbb;
+    margin-bottom: 8px;
+  }
+  .match-info { font-size: 12px; color: #ccc; text-align: center; margin-top: 0.75rem; line-height: 1.6; }
+  .info-box {
+    background: #fff8e1;
+    border: 1.5px solid #ffe082;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #856404;
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+  }
+  .spinner { text-align:center; color:#aaa; font-size:13px; padding:1rem 0; }
+  .admin-hint {
+    font-size: 12px;
+    color: #bbb;
+    text-align: center;
+    margin-bottom: 8px;
+  }
 </style>
 </head>
 <body>
 <div class="card">
   <div class="card-header">
     <div class="badge">BTCC 2nd XI</div>
-    <h1>&#127861; Teas Picker</h1>
-    <p class="subtitle">Kent Cricket League &middot; Division 9</p>
+    <h1>🍵 Teas Picker</h1>
+    <p class="subtitle">Kent Cricket League · Division 9</p>
     <div style="margin-top:6px;">
       <span class="live-dot"></span>
       <span class="live-label" id="liveLabel">Connecting...</span>
     </div>
   </div>
+
   <div class="tabs">
-    <button class="tab active" onclick="showTab('pick')">&#127922; Pick</button>
-    <button class="tab" onclick="showTab('team')">&#128101; Team</button>
-    <button class="tab" onclick="showTab('history')">&#128203; History</button>
+    <button class="tab active" onclick="showTab('pick')">🎲 Pick</button>
+    <button class="tab" onclick="showTab('team')">👥 Team</button>
+    <button class="tab" onclick="showTab('history')">📋 History</button>
   </div>
+
+  <!-- PICK SCREEN -->
   <div class="screen active" id="screen-pick">
     <div id="pickInfo" class="info-box" style="display:none;"></div>
     <div class="players" id="pickList"><div class="spinner">Loading...</div></div>
-    <p class="admin-hint">Only the umpire needs to press the button below</p>
-    <button class="big-btn green" id="spinBtn" onclick="pick()">&#127922; Pick teas volunteer</button>
-    <div class="result" id="result"><span class="result-sub">Waiting for the pick...</span></div>
-    <button class="big-btn outline" id="confirmBtn" style="display:none;" onclick="confirmWinner()">&#9989; Confirm &amp; save to history</button>
-    <p class="match-info">Hayes Lane, Bromley &middot; Meet 11:15 &middot; Start 1:00 pm<br>Umpire: J. Twose</p>
+    <p class="admin-hint">Only the umpire needs to press the button 👇</p>
+    <button class="big-btn green" id="spinBtn" onclick="pick()">🎲 Pick teas volunteer</button>
+    <div class="result" id="result">
+      <span class="result-sub">Waiting for the pick...</span>
+    </div>
+    <button class="big-btn outline" id="confirmBtn" style="display:none;" onclick="confirmWinner()">✅ Confirm &amp; save to history</button>
+    <a class="big-btn whatsapp" id="waBtn" style="display:none; text-decoration:none; justify-content:center;" target="_blank">💬 Share result to WhatsApp</a>
+    <p class="match-info">Hayes Lane, Bromley · Meet 11:15 · Start 1:00 pm<br>Umpire: J. Twose</p>
   </div>
+
+  <!-- TEAM SCREEN -->
   <div class="screen" id="screen-team">
     <p class="section-label">Current squad</p>
     <div class="players" id="teamList"></div>
@@ -95,111 +268,312 @@ h1 { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 0.2rem; }
       <input type="text" id="newPlayerInput" placeholder="Full name" onkeydown="if(event.key==='Enter')addPlayer()" />
       <button onclick="addPlayer()">Add</button>
     </div>
-    <button class="big-btn outline" onclick="resetToDefault()">&#8617; Reset to default squad</button>
+    <button class="big-btn outline" onclick="resetToDefault()">↩ Reset to default squad</button>
   </div>
+
+  <!-- HISTORY SCREEN -->
   <div class="screen" id="screen-history">
     <p class="section-label">Teas done this cycle</p>
     <div class="history-list" id="historyList"></div>
-    <button class="big-btn outline" onclick="clearHistory()">&#128465; Clear all history (new cycle)</button>
+    <button class="big-btn outline" onclick="clearHistory()">🗑 Clear all history (new cycle)</button>
   </div>
 </div>
+
+<!-- Firebase SDKs -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, push, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, set, onValue, push, remove, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyA9s8xo0-p3XUpji_l0JDFVm71jPVKln80",
   authDomain: "btcc2s-teas-picker.firebaseapp.com",
-  databaseURL: "https://btcc2s-teas-picker-default-rtdb.europe-west1.firebasedatabase.app"",
+  databaseURL: "https://btcc2s-teas-picker-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "btcc2s-teas-picker",
   storageBucket: "btcc2s-teas-picker.firebasestorage.app",
   messagingSenderId: "974152278497",
-  appId: "1:974152278497:web:7cb00f734751770e9cb2a0"
+  appId: "1:974152278497:web:7cb00f734751770e9cb2a0",
+  measurementId: "G-HKJH2Z84MH"
 };
+
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const DEFAULT_TEAM = ["Mathar Saeed","Lewis Dicker","Tom Breakey","Chris Doyle","Kane Boenke","Sam Doyle","Michael Slamon"];
-let currentWinner = null, teamData = [...DEFAULT_TEAM], historyData = [], spinning = false;
-const teamRef = ref(db,"team"), historyRef = ref(db,"history"), resultRef = ref(db,"currentResult");
-onValue(ref(db,".info/connected"), snap => {
-  const l = document.getElementById("liveLabel");
-  if(snap.val()){l.textContent="Live - everyone sees this";l.style.color="#25D366";}
-  else{l.textContent="Reconnecting...";l.style.color="#f59e0b";}
+
+const DEFAULT_TEAM = [
+  "Mathar Saeed","Lewis Dicker","Tom Breakey","Chris Doyle",
+  "Kane Boenke","Sam Doyle","Michael Slamon"
+];
+
+let currentWinner = null;
+let teamData = [...DEFAULT_TEAM];
+let historyData = [];
+let spinning = false;
+
+// Refs
+const teamRef = ref(db, 'team');
+const historyRef = ref(db, 'history');
+const resultRef = ref(db, 'currentResult');
+
+// ── Live connection label ──────────────────────────────
+const connRef = ref(db, '.info/connected');
+onValue(connRef, snap => {
+  const label = document.getElementById('liveLabel');
+  if (snap.val()) {
+    label.textContent = 'Live – everyone sees this';
+    label.style.color = '#25D366';
+  } else {
+    label.textContent = 'Reconnecting...';
+    label.style.color = '#f59e0b';
+  }
 });
-onValue(teamRef, snap => { const v=snap.val(); teamData=v?Object.values(v):[...DEFAULT_TEAM]; renderPick(); renderTeam(); });
-onValue(historyRef, snap => { const v=snap.val(); historyData=v?Object.entries(v).map(([k,v2])=>({key:k,...v2})).reverse():[]; renderPick(); renderHistory(); });
+
+// ── Listen: team ───────────────────────────────────────
+onValue(teamRef, snap => {
+  const val = snap.val();
+  teamData = val ? Object.values(val) : [...DEFAULT_TEAM];
+  renderPick();
+  renderTeam();
+});
+
+// ── Listen: history ────────────────────────────────────
+onValue(historyRef, snap => {
+  const val = snap.val();
+  historyData = val ? Object.entries(val).map(([k,v]) => ({key:k,...v})).reverse() : [];
+  renderPick();
+  renderHistory();
+});
+
+// ── Listen: live result (so all watchers see the spin) ─
 onValue(resultRef, snap => {
-  const v=snap.val(); if(!v) return;
-  const el=document.getElementById("result");
-  if(v.state==="spinning"){ el.classList.remove("has-winner"); el.innerHTML="<span class='result-name rolling'>"+v.name+"</span>"; document.getElementById("confirmBtn").style.display="none"; }
-  else if(v.state==="done"){ el.classList.add("has-winner"); el.innerHTML="<span class='result-name'>&#127881; "+v.name+"</span><span class='result-sub'>is on teas today!</span>"; currentWinner=v.name; document.getElementById("confirmBtn").style.display="block"; document.getElementById("spinBtn").disabled=false; spinning=false; renderPick(); }
+  const val = snap.val();
+  if (!val) return;
+  const resultEl = document.getElementById('result');
+  if (val.state === 'spinning') {
+    resultEl.classList.remove('has-winner');
+    resultEl.innerHTML = '<span class="result-name rolling">' + val.name + '</span>';
+    document.getElementById('confirmBtn').style.display = 'none';
+  } else if (val.state === 'done') {
+    resultEl.classList.add('has-winner');
+    resultEl.innerHTML =
+      '<span class="result-name">🎉 ' + val.name + '</span>' +
+      '<span class="result-sub">is on teas today!</span>';
+    currentWinner = val.name;
+    document.getElementById('confirmBtn').style.display = 'block';
+    document.getElementById('spinBtn').disabled = false;
+    spinning = false;
+    renderPick();
+    showWaBtn(val.name);
+  }
 });
-function whoHasDoneTeas(){ return new Set(historyData.map(h=>h.name)); }
-window.showTab=function(tab){ document.querySelectorAll(".tab").forEach((t,i)=>t.classList.toggle("active",["pick","team","history"][i]===tab)); document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active")); document.getElementById("screen-"+tab).classList.add("active"); };
-function renderPick(){
-  const done=whoHasDoneTeas(), list=document.getElementById("pickList"), infoBox=document.getElementById("pickInfo");
-  list.innerHTML="";
-  if(teamData.length===0){list.innerHTML="<div class='empty-state'>No players. Go to Team tab.</div>";infoBox.style.display="none";return;}
-  const eligible=teamData.filter(p=>!done.has(p));
-  if(eligible.length===0){infoBox.style.display="block";infoBox.textContent="Everyone has done teas this cycle! History cleared.";set(historyRef,null);}
-  else if(done.size>0){infoBox.style.display="block";infoBox.textContent="Crossed-out players have already done teas this cycle.";}
-  else{infoBox.style.display="none";}
-  teamData.forEach((p,i)=>{
-    const isDone=done.has(p), isWinner=currentWinner===p;
-    const row=document.createElement("div"); row.className="player-row"+(isDone?" skipped":"")+(isWinner?" winner-highlight":"");
-    const num=document.createElement("span"); num.className="player-num"; num.textContent=i+1;
-    const name=document.createElement("span"); name.className="player-name"; name.textContent=p;
-    row.appendChild(num); row.appendChild(name);
-    if(isDone){const b=document.createElement("span");b.className="teas-badge";b.textContent="done";row.appendChild(b);}
+
+// ── Helpers ────────────────────────────────────────────
+function whoHasDoneTeas() {
+  return new Set(historyData.map(h => h.name));
+}
+
+// ── Tabs ───────────────────────────────────────────────
+window.showTab = function(tab) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.classList.toggle('active', ['pick','team','history'][i] === tab);
+  });
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + tab).classList.add('active');
+};
+
+// ── Pick screen ────────────────────────────────────────
+function renderPick() {
+  const done = whoHasDoneTeas();
+  const list = document.getElementById('pickList');
+  const infoBox = document.getElementById('pickInfo');
+  list.innerHTML = '';
+
+  if (teamData.length === 0) {
+    list.innerHTML = '<div class="empty-state">No players. Go to Team tab.</div>';
+    infoBox.style.display = 'none';
+    return;
+  }
+
+  const eligible = teamData.filter(p => !done.has(p));
+  if (eligible.length === 0) {
+    infoBox.style.display = 'block';
+    infoBox.textContent = '🔄 Everyone has done teas this cycle! History cleared — starting fresh.';
+    set(historyRef, null);
+  } else if (done.size > 0) {
+    infoBox.style.display = 'block';
+    infoBox.textContent = '🟡 Crossed-out players have already done teas this cycle and are excluded from the draw.';
+  } else {
+    infoBox.style.display = 'none';
+  }
+
+  teamData.forEach((p, i) => {
+    const isDone = done.has(p);
+    const isWinner = currentWinner === p;
+    const row = document.createElement('div');
+    row.className = 'player-row' + (isDone ? ' skipped' : '') + (isWinner ? ' winner-highlight' : '');
+
+    const num = document.createElement('span');
+    num.className = 'player-num';
+    num.textContent = i + 1;
+
+    const name = document.createElement('span');
+    name.className = 'player-name';
+    name.textContent = p;
+
+    row.appendChild(num);
+    row.appendChild(name);
+
+    if (isDone) {
+      const badge = document.createElement('span');
+      badge.className = 'teas-badge';
+      badge.textContent = '✓ done';
+      row.appendChild(badge);
+    }
     list.appendChild(row);
   });
 }
-window.pick=function(){
-  if(spinning) return;
-  const done=whoHasDoneTeas(), active=teamData.filter(p=>!done.has(p));
-  if(active.length===0) return;
-  spinning=true; currentWinner=null;
-  document.getElementById("spinBtn").disabled=true;
-  document.getElementById("confirmBtn").style.display="none";
-  document.getElementById("result").classList.remove("has-winner");
-  let ticks=0; const total=20+Math.floor(Math.random()*15); const winner=active[Math.floor(Math.random()*active.length)];
-  const iv=setInterval(()=>{ const r=active[Math.floor(Math.random()*active.length)]; set(resultRef,{state:"spinning",name:r}); ticks++; if(ticks>=total){clearInterval(iv);set(resultRef,{state:"done",name:winner});}},120);
+
+// ── Spin ───────────────────────────────────────────────
+window.pick = function() {
+  if (spinning) return;
+  const done = whoHasDoneTeas();
+  const active = teamData.filter(p => !done.has(p));
+  if (active.length === 0) return;
+
+  spinning = true;
+  currentWinner = null;
+  document.getElementById('spinBtn').disabled = true;
+  document.getElementById('confirmBtn').style.display = 'none';
+  document.getElementById('waBtn').style.display = 'none';
+  document.getElementById('result').classList.remove('has-winner');
+
+  let ticks = 0;
+  const total = 20 + Math.floor(Math.random() * 15);
+  const winner = active[Math.floor(Math.random() * active.length)];
+
+  const interval = setInterval(() => {
+    const r = active[Math.floor(Math.random() * active.length)];
+    set(resultRef, { state: 'spinning', name: r });
+    ticks++;
+    if (ticks >= total) {
+      clearInterval(interval);
+      set(resultRef, { state: 'done', name: winner });
+    }
+  }, 120);
 };
-window.confirmWinner=function(){
-  if(!currentWinner) return;
-  const today=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
-  push(historyRef,{name:currentWinner,date:today}); set(resultRef,null); currentWinner=null;
-  document.getElementById("confirmBtn").style.display="none";
-  document.getElementById("result").classList.remove("has-winner");
-  document.getElementById("result").innerHTML="<span class='result-sub'>Saved! Press again to pick next.</span>";
+
+// ── Confirm winner ─────────────────────────────────────
+function showWaBtn(name) {
+  var today = new Date().toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"});
+  var msg = "\ud83c\udfd8 *BTCC 2nd XI Teas Draw*\n" + today + "\n\n\ud83c\udf75 *" + name + " is on teas today!* \ud83c\udf75\n\nPicked randomly from today's squad. Thanks " + name.split(" ")[0] + "! \ud83d\ude4c";
+  var btn = document.getElementById("waBtn");
+  btn.href = "https://wa.me/?text=" + encodeURIComponent(msg);
+  btn.style.display = "flex";
+}
+
+window.confirmWinner = function() {
+  if (!currentWinner) return;
+  const today = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+  push(historyRef, { name: currentWinner, date: today });
+  set(resultRef, null);
+  currentWinner = null;
+  document.getElementById('confirmBtn').style.display = 'none';
+  document.getElementById('waBtn').style.display = 'none';
+  document.getElementById('result').classList.remove('has-winner');
+  document.getElementById('result').innerHTML = '<span class="result-sub">Saved! Press again to pick next.</span>';
 };
-function renderTeam(){
-  const done=whoHasDoneTeas(), list=document.getElementById("teamList"); list.innerHTML="";
-  if(teamData.length===0){list.innerHTML="<div class='empty-state'>No players yet.</div>";return;}
-  teamData.forEach((p,i)=>{
-    const isDone=done.has(p); const row=document.createElement("div"); row.className="player-row"+(isDone?" done-teas":"");
-    const num=document.createElement("span"); num.className="player-num"; num.textContent=i+1;
-    const name=document.createElement("span"); name.className="player-name"; name.textContent=p;
-    const del=document.createElement("button"); del.className="row-btn"; del.innerHTML="&#10005;";
-    del.onclick=()=>{const t=[...teamData];t.splice(i,1);set(teamRef,t.length?t:null);};
-    row.appendChild(num); row.appendChild(name);
-    if(isDone){const b=document.createElement("span");b.className="teas-badge";b.textContent="done";row.appendChild(b);}
-    row.appendChild(del); list.appendChild(row);
+
+// ── Team screen ────────────────────────────────────────
+function renderTeam() {
+  const done = whoHasDoneTeas();
+  const list = document.getElementById('teamList');
+  list.innerHTML = '';
+
+  if (teamData.length === 0) {
+    list.innerHTML = '<div class="empty-state">No players yet.</div>';
+    return;
+  }
+
+  teamData.forEach((p, i) => {
+    const isDone = done.has(p);
+    const row = document.createElement('div');
+    row.className = 'player-row' + (isDone ? ' done-teas' : '');
+
+    const num = document.createElement('span');
+    num.className = 'player-num';
+    num.textContent = i + 1;
+
+    const name = document.createElement('span');
+    name.className = 'player-name';
+    name.textContent = p;
+
+    const del = document.createElement('button');
+    del.className = 'row-btn';
+    del.innerHTML = '&#10005;';
+    del.onclick = () => {
+      const newTeam = [...teamData];
+      newTeam.splice(i, 1);
+      set(teamRef, newTeam.length ? newTeam : null);
+    };
+
+    row.appendChild(num);
+    row.appendChild(name);
+    if (isDone) {
+      const badge = document.createElement('span');
+      badge.className = 'teas-badge';
+      badge.textContent = '🍵 done';
+      row.appendChild(badge);
+    }
+    row.appendChild(del);
+    list.appendChild(row);
   });
 }
-window.addPlayer=function(){ const input=document.getElementById("newPlayerInput"); const name=input.value.trim(); if(!name||teamData.includes(name)) return; set(teamRef,[...teamData,name]); input.value=""; };
-window.resetToDefault=function(){ if(confirm("Reset squad to default team?")) set(teamRef,DEFAULT_TEAM); };
-function renderHistory(){
-  const list=document.getElementById("historyList"); list.innerHTML="";
-  if(historyData.length===0){list.innerHTML="<div class='empty-state'>No history yet.</div>";return;}
-  historyData.forEach(h=>{
-    const row=document.createElement("div"); row.className="history-row";
-    const left=document.createElement("div"); left.innerHTML="<span class='history-name'>&#127861; "+h.name+"</span><br><span class='history-date'>"+h.date+"</span>";
-    const del=document.createElement("button"); del.className="history-del"; del.textContent="x";
-    del.onclick=()=>remove(ref(db,"history/"+h.key));
-    row.appendChild(left); row.appendChild(del); list.appendChild(row);
+
+window.addPlayer = function() {
+  const input = document.getElementById('newPlayerInput');
+  const name = input.value.trim();
+  if (!name || teamData.includes(name)) return;
+  const newTeam = [...teamData, name];
+  set(teamRef, newTeam);
+  input.value = '';
+};
+
+window.resetToDefault = function() {
+  if (confirm('Reset squad to default team?')) set(teamRef, DEFAULT_TEAM);
+};
+
+// ── History screen ─────────────────────────────────────
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  list.innerHTML = '';
+
+  if (historyData.length === 0) {
+    list.innerHTML = '<div class="empty-state">No history yet.</div>';
+    return;
+  }
+
+  historyData.forEach(h => {
+    const row = document.createElement('div');
+    row.className = 'history-row';
+
+    const left = document.createElement('div');
+    left.innerHTML = '<span class="history-name">🍵 ' + h.name + '</span><br><span class="history-date">' + h.date + '</span>';
+
+    const del = document.createElement('button');
+    del.className = 'history-del';
+    del.textContent = '✕';
+    del.onclick = () => remove(ref(db, 'history/' + h.key));
+
+    row.appendChild(left);
+    row.appendChild(del);
+    list.appendChild(row);
   });
 }
-window.clearHistory=function(){ if(confirm("Clear all history? Everyone becomes eligible again.")) set(historyRef,null); };
+
+window.clearHistory = function() {
+  if (confirm('Clear all history? Everyone becomes eligible again.')) {
+    set(historyRef, null);
+  }
+};
+
 </script>
 </body>
 </html>
